@@ -12,18 +12,19 @@ knit        : slidify::knit2slides
 ---
 
 <style>
-#slide-1 img{float:center;margin:auto; padding:8px;}
+#slide-1 img{float:left;margin:auto; padding:8px;}
 </style>
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/maphang.jpg" alt="fish" style="width: 800px;"/>
+<img src="~/Documents/WritingProject/presentation/images/maphang2.jpg" alt="fish" style="width: 850px;"/>
 </center>
 
 
 ```{r, map, echo=FALSE, message=FALSE, eval=FALSE}
-qmap("Seward, AK", zoom=4)+
+qmap("Seward, AK", zoom=4, maptype="hybrid")+
   #geom_point(aes(x=-149.4296,y=60.1347), size=7, shape=2)
-  geom_segment(aes(x=-149.4296, y= 60.1347, xend = -153.863, yend = 65.99024),
+  #-149.2398, 58.99511
+  geom_segment(aes(x=-149.4296, y= 60.1347, xend = -156.863, yend = 65.99024),
                arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)
 ```
 
@@ -83,13 +84,13 @@ ADF&G non-confidential data. 1994-2013. Homer, AK: Alaska Department of Fish and
 ## Logbook Data 2004-2013
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/logpage.png" alt="map" style="width: 900px;"/>
+<img src="~/Documents/WritingProject/presentation/images/logpage.png" alt="map" style="width: 900px;"/>
 </center>
 
 ---
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/statchart.png" alt="map" style="width: 850px;"/>
+<img src="~/Documents/WritingProject/presentation/images/statchart.png" alt="map" style="width: 850px;"/>
 </center>
 
 
@@ -97,18 +98,18 @@ ADF&G non-confidential data. 1994-2013. Homer, AK: Alaska Department of Fish and
 ---
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/twodmap.png" alt="map" style="width: 750px;"/>
+<img src="~/Documents/WritingProject/presentation/images/twodmap.png" alt="map" style="width: 800px;"/>
 </center>
 
 <!---![twodmap](twodmap.png)--->
 
 
 
-```{r, twodmap, echo=FALSE, eval=FALSE, message=FALSE, fig.height = 12, fig.width=24}
+```{r, twodmap, echo=FALSE, eval=FALSE, message=FALSE, fig.height = 16, fig.width=36}
 require(ggmap)
 seward <- get_map(location =c(-148.9999, 59.70589), zoom=8, maptype="terrain", 
-                  filename="~/Documents/Writing Project/seward")
-map.file <- read.csv("~/Documents/Writing Project/report/datafiles/mapfile.csv")
+                  filename="~/Documents/WritingProject/seward")
+map.file <- read.csv("~/Documents/WritingProject/report/datafiles/mapfile.csv")
 #order areas by distance for the purpose of color coding
 map.file$area <- factor(map.file$area, levels=c("resbay", "aialik", "whidbey", "junken", "granite", "twoarm", "elrington", "mcarthur", "pye", "capecleare", "straits", "nuka", "patton"))
 
@@ -117,25 +118,25 @@ colourCount = length(unique(map.file$area))
 getPalette = colorRampPalette(brewer.pal(9, "Set1"))
 
 ggmap(seward, extent = 'normal') + 
-  geom_path(aes(x = lon, y = lat, group=area, size=intervals), data = map.file)+
+  geom_path(aes(x = lon, y = lat, group=area), data = map.file)+
   geom_polygon(aes(fill=area, group=area), data=map.file)+
   scale_fill_manual(values=getPalette(colourCount))+
-  labs(size="proportion of use")+
   geom_segment(aes(x=-149.4296, y= 60.1347, xend = -149.6954, yend = 60.50437),
-               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)
+               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)+
+  theme(legend.text=element_text(size=15))
 ```
 
 ---
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/twodmapindareas.png" alt="map" style="width: 750px;"/>
+<img src="~/Documents/WritingProject/presentation/images/twodmapindareas.png" alt="map" style="width: 800px;"/>
 </center>
 
 ```{r, twodmap2, echo=FALSE, eval=FALSE, message=FALSE, fig.height = 12, fig.width=24}
 require(ggmap)
 seward <- get_map(location =c(-148.9999, 59.70589), zoom=8, maptype="terrain", 
-                  filename="~/Documents/Writing Project/seward")
-map.file <- read.csv("~/Documents/Writing Project/report/datafiles/mapfile.csv")
+                  filename="~/Documents/WritingProject/seward")
+map.file <- read.csv("~/Documents/WritingProject/report/datafiles/mapfile.csv")
 #order areas by distance for the purpose of color coding
 map.file$area <- factor(map.file$area, levels=c("resbay", "aialik", "whidbey", "junken", "granite", "twoarm", "elrington", "mcarthur", "pye", "capecleare", "straits", "nuka", "patton"))
 
@@ -148,14 +149,15 @@ ggmap(seward, extent = 'normal') +
                                c("capecleare","patton", "nuka", "resbay")))+
   scale_fill_manual(values=c("red", "brown", "purple", "green"))+
   geom_segment(aes(x=-149.4296, y= 60.1347, xend = -149.6954, yend = 60.50437),
-               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)
+               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)+
+  theme(legend.text=element_text(size=20))
 ```
 
 ---
 ## Logbook: 2004-2013
 
 ```{r, logplot, echo=FALSE, fig.width=14}
-ind.census <- read.csv("~/Documents/Writing Project/report/datafiles/census.csv")
+ind.census <- read.csv("~/Documents/WritingProject/report/datafiles/census.csv")
 ###Now look at indicator stat areas with census data
 #Nuka is not in census data
 change <- list(
@@ -168,21 +170,25 @@ change_label <- function(variable,value){
 require(ggplot2)
 ggplot(ind.census, aes(year, proportion, group=area))+
   geom_line(aes(colour=area), size=1)+
-  geom_point(aes(colour=area), size=4)+
-  facet_grid(.~expchange, labeller=change_label)
+  geom_point(aes(colour=area), size=6)+
+  facet_grid(.~expchange, labeller=change_label)+
+  ylab("Proportion of Use")+
+  theme(strip.text.x=element_text(size=15), axis.text=element_text(size=18),
+        axis.title.x=element_blank(), axis.title.y=element_text(size=15),
+        legend.text=element_text(size=15))
 ```
 
 ---
 ## Interview Data 1993-2014
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/jacksparrow.jpg" alt="jack" style="width: 300px;float:right; padding: 10px; padding-top:initial"/>
+<img src="~/Documents/WritingProject/presentation/images/jacksparrow.jpg" alt="jack" style="width: 300px;float:right; padding: 10px; padding-top:initial"/>
 </center>
 
 <ul style="list-style-type:circle">
 <li>Two days a week randomly selected for interviews </li>
 <li>Effort spread across the four harbor cleaning stations </li>
-<li>Boat selection is pseudo-random</li>
+<li>Each boat is asked:</li>
 
 <ul style="list-style-type:persian">
 <li>Did you catch bottom fish today?</li>
@@ -207,48 +213,24 @@ kable(key)
 ## Interview 1993-2014
 
 ```{r, intplot, echo=FALSE, message=FALSE, fig.width=14}
-indicator <- read.csv("~/Documents/Writing Project/report/datafiles/indicator.csv")
+indicator <- read.csv("~/Documents/WritingProject/report/datafiles/indicator.csv")
 ggplot(indicator, aes(YEAR, Proportion, group=area))+
   geom_line(aes(colour=area), size=1)+
-  geom_point(aes(colour=area), size=4)+
-  facet_grid(expchange~., labeller=change_label)
+  geom_point(aes(colour=area), size=6)+
+  facet_grid(expchange~., labeller=change_label)+
+  ylab("Proportion of Use")+
+  theme(axis.title.x=element_blank(), axis.text=element_text(size=16), 
+        axis.title.y=element_text(size=15), legend.text=element_text(size=15))
 ```
 
---- 
-## Comparison - Resurrection Bay
 
-```{r, compareres, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE}
-#Look at resbay
-res.true <- compare %>%
-  filter(area=="resbay")
-res.int <- indicator %>%
-  filter(area=="resbay")
-
-#add in the truth
-res.int[12:21, 5] <- res.true$proportion
-names(res.int)[5] <- "truth"
-
-#d <- spline(x=res.int$YEAR, y=res.int$Proportion, n=22)
-
-#try doing this just with a smoother
-ggplot(data=res.int, aes(YEAR, Proportion))+
-  geom_line(aes(YEAR, Proportion), colour="darkred", linetype="dotted")+
-  geom_point(aes(YEAR, Proportion), colour="darkred", size=4)+
-  stat_smooth(colour="darkred", level=0.95, data=res.int[12:21,], size=2)+
-  #geom_line(aes(d$x, d$y), color="darkred")+
-  stat_smooth(aes(YEAR, truth), alpha=0.6, level=0.95, colour="midnight blue",
-              size=2)+
-  geom_point(aes(YEAR, truth), colour="midnightblue", size=4)+
-  geom_line(aes(YEAR, truth), colour="midnightblue", linetype="dotted")
-
-```
 
 ---
-## Comparison - Cape Cleare
+## Comparison- Cape Cleare
 
 ```{r, compare, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE}
 require(dplyr)
-compare <- read.csv("~/Documents/Writing Project/report/datafiles/compare.csv")
+compare <- read.csv("~/Documents/WritingProject/report/datafiles/compare.csv")
 
 #Look at cape cleare first
 cleare.true <- compare %>%
@@ -270,43 +252,16 @@ names(cleare.int)[5] <- "truth"
 
 #try doing this just with a smoother
 ggplot(data=cleare.int, aes(YEAR, Proportion))+
-  geom_line(aes(YEAR, Proportion), colour="darkred", size=2, linetype="dashed")+
+  geom_line(aes(YEAR, Proportion), colour="darkred")+
   geom_point(aes(YEAR, Proportion), colour="darkred", size=5)+
-  stat_smooth(colour="darkred", level=0.95, data=cleare.int[12:21,], size=2)+
+  stat_smooth(colour="darkred", level=0.95, data=cleare.int[12:21,], size=2, n=100)+
   stat_smooth(aes(YEAR, truth), alpha=0.6, level=0.95, colour="midnightblue",
               size=2)+
   geom_point(aes(YEAR, truth), colour="midnightblue", size=5)+
-  geom_line(aes(YEAR, truth), colour="midnightblue", size=2, linetype="dashed")+
+  geom_line(aes(YEAR, truth), colour="midnightblue")+
   ylab("Proportion of Use")+
-  theme(axis.title.x=element_blank(), axis.text=element_text(size=18), 
+  theme(axis.title.x=element_blank(), axis.text=element_text(size=16), 
         axis.title.y=element_text(size=15))
-
-```
-
----
-## Comparison - Patton Bay
-
-```{r, comparepatton, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE}
-indicator <- read.csv("~/Documents/Writing Project/report/datafiles/indicator.csv")
-
-#Look at patton
-patton.true <- compare %>%
-  filter(area=="patton")
-patton.int <- subset(indicator, area=="patton")
-
-#add in the truth
-patton.int[12:21, 5] <- patton.true$proportion
-names(patton.int)[5] <- "truth"
-
-#try doing this just with a smoother
-ggplot(data=patton.int, aes(YEAR, Proportion))+
-  geom_line(aes(YEAR, Proportion), colour="darkred", linetype="dotted")+
-  geom_point(aes(YEAR, Proportion), colour="darkred", size=4)+
-  stat_smooth(colour="darkred", level=0.95, data=patton.int[12:21,], size=2)+
-  stat_smooth(aes(YEAR, truth), alpha=0.6, level=0.95, colour="midnight blue",
-              size=2)+
-  geom_point(aes(YEAR, truth), colour="midnightblue", size=4)+
-  geom_line(aes(YEAR, truth), colour="midnightblue", linetype="dotted")
 
 ```
 
@@ -351,7 +306,7 @@ ggplot(counts, aes(YEAR, sampleprop))+
   #stat_function(fun=fun.intcleare.prob, col="chocolate4")
   geom_ribbon(aes(ymin=lwrprob, ymax=uprprob), alpha=0.3)+
   facet_wrap(~area)+
-  theme(axis.title.x=element_blank(), axis.text=element_text(size=18))+
+  theme(axis.title.x=element_blank(), axis.text=element_text(size=16))+
   ylab("Proportion of Use")+
   theme(axis.title.y=element_text(size=15))
 ```
@@ -412,7 +367,7 @@ results <- results %>%
 ggplot(results, aes(area, oddsratio))+
   geom_hline(aes(yintercept=1), linetype="dashed")+
   geom_segment(aes(x=area, y=odds.le, xend=area, yend=odds.ue), size=2)+
-  geom_point(size=6, col="darkred")+
+  geom_point(size=7, col="darkred")+
   ylab("Odds Ratio 2014/1993")+
   theme(axis.text.y = element_text(size=20), axis.text.x=element_text(size=20),
         axis.title.y = element_text(size=20), axis.title.x=element_blank())
@@ -425,8 +380,8 @@ ggplot(results, aes(area, oddsratio))+
 ### **Question 2**: Is there evidence of a change in the mean length of halibut caught by Seward fishermen over the years 1994-2013?</li>
 
 ```{r, echo=FALSE, fig.width=12, fig.height=6, warning=FALSE}
-avg.lengths <- read.csv("~/Documents/Writing Project/report/datafiles/avgs.csv")
-fish.stat <- read.csv("~/Documents/Writing Project/report/datafiles/fishstat.csv")
+avg.lengths <- read.csv("~/Documents/WritingProject/report/datafiles/avgs.csv")
+fish.stat <- read.csv("~/Documents/WritingProject/report/datafiles/fishstat.csv")
 #plot again in inches
 ggplot(fish.stat, aes(as.numeric(as.character(year)), length.in))+
   geom_point()+
@@ -442,7 +397,7 @@ ggplot(fish.stat, aes(as.numeric(as.character(year)), length.in))+
 ---
 ## Biological Data 1993-2013
 <center>
-<img src="~/Documents/Writing Project/presentation/images/jacksparrow.jpg" alt="jack" style="width: 300px;float:right; padding: 10px; padding-top:initial"/>
+<img src="~/Documents/WritingProject/presentation/images/jacksparrow.jpg" alt="jack" style="width: 300px;float:right; padding: 10px; padding-top:initial"/>
 </center>
 
 <br>
@@ -454,7 +409,7 @@ ggplot(fish.stat, aes(as.numeric(as.character(year)), length.in))+
 <br><br>
 
 ```{r, bio, echo=FALSE, results='asis'}
-fish.stat <- read.csv("~/Documents/Writing Project/report/datafiles/fishstat.csv")
+fish.stat <- read.csv("~/Documents/WritingProject/report/datafiles/fishstat.csv")
 kable(head(fish.stat[,c(1:8,10)]))
 ```
 
@@ -462,14 +417,14 @@ kable(head(fish.stat[,c(1:8,10)]))
 ---
 
 <center>
-<img src="~/Documents/Writing Project/presentation/images/biomap.png" alt="map" style="width: 750px;"/>
+<img src="~/Documents/WritingProject/presentation/images/biomap.png" alt="map" style="width: 800px;"/>
 </center>
 
 ```{r, twodmap3, echo=FALSE, eval=FALSE, message=FALSE, fig.height = 12, fig.width=24}
 require(ggmap)
 seward <- get_map(location =c(-148.9999, 59.70589), zoom=8, maptype="terrain", 
-                  filename="~/Documents/Writing Project/seward")
-map.file <- read.csv("~/Documents/Writing Project/report/datafiles/mapfile.csv")
+                  filename="~/Documents/WritingProject/seward")
+map.file <- read.csv("~/Documents/WritingProject/report/datafiles/mapfile.csv")
 #order areas by distance for the purpose of color coding
 map.file$area <- factor(map.file$area, levels=c("resbay", "aialik", "whidbey", "junken", "granite", "twoarm", "elrington", "mcarthur", "pye", "capecleare", "straits", "nuka", "patton"))
 
@@ -484,7 +439,8 @@ ggmap(seward, extent = 'normal') +
                                  "resbay", "junken")))+
   scale_fill_manual(values=c("red", "green", "purple", "yellow", "brown"))+
   geom_segment(aes(x=-149.4296, y= 60.1347, xend = -149.6954, yend = 60.50437),
-               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)
+               arrow= arrow(length=unit(0.25,"inches"), ends="first"), size=3)+
+  theme(legend.text=element_text(size=25))
   
 ```
 
@@ -509,24 +465,10 @@ ggplot(avg.lengths, aes(as.numeric(as.character(year)), mean.in))+
   theme(axis.title.x=element_blank(), axis.text.x=element_text(size=20, 
                                                                angle=90),
         axis.text.y=element_text(size=20),
-        axis.title.y=element_text(size=18))+
+        axis.title.y=element_text(size=18), 
+        strip.text.x=element_text(size=20))+
   ylab("Mean Length (inches)")
 ```
-
----
-## Mixed Effects Model
-Each area modeled separately
-
-<br>
-<br>
-<br>
-
-<center>$length_{i}=\beta_0+\beta_1year_i+\alpha_{i}+\epsilon_{i}$</center>
-
-<center>$\epsilon_{i} \overset{iid}{\sim} N(0, \sigma^2)$</center>
-<center>$\alpha_{i} \overset{iid}{\sim} N(0, \sigma^2_{\alpha})$</center>
-<br>
-<center>$i \in (1994, 1995,...,2013)$</center>
 
 --- 
 In the waters around Cape Junken, there is strong evidence of a relationship between mean fish length and time over the years $1994$ to $2013$ (p-value$<0.0001$ from t-stat$=-5.370$ on $18$ df).
@@ -545,7 +487,6 @@ lm.resbay.ols <- lm(mean.in~year, data=subset(avg.lengths, area=="resbay"))
 
 ```{r, wls, echo=FALSE}
 #Do WLS to save for plot
-
 weights <- fish.stat %>%
   group_by(area, year) %>%
   summarise(n=length(length.in), 
@@ -554,7 +495,7 @@ weights <- fish.stat %>%
 
 lm.el.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="elrington"), weights=subset(weights, area=="elrington")$n)
 
-lm.cleare.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="capecleare", weights=subset(weights, area=="capecleare")$n))
+lm.cleare.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
 
 lm.junken.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="junken"), weights=subset(weights, area=="junken")$n)
 
@@ -718,7 +659,7 @@ results2 <- results2 %>%
 ggplot(results2, aes(area, incr))+
   geom_hline(aes(yintercept=0), linetype="dashed")+
   geom_segment(aes(x=area, y=incr.le, xend=area, yend=incr.ue), size=2)+
-  geom_point(size=6, col="darkred")+
+  geom_point(size=7, col="darkred")+
   ylab("Change in Fish Length 1994-2013")+
   theme(axis.text.y = element_text(size=20), axis.text.x=element_text(size=20),
         axis.title.y = element_text(size=20), axis.title.x=element_blank())
@@ -727,8 +668,24 @@ ggplot(results2, aes(area, incr))+
 
 ---
 
-```{r, el, echo=FALSE, fig.width=14, fig.height=9}
+<center>
+95% CI for change in fish length 1993-2014 in Cape Cleare <br><br>
+OLS-black dashed line (-9.40, 1.37) <br>
+</center>
+
+<center>
+WLS-blue line (-10.40, -2.27)  <br>
+</center>
+
+<center>
+Mixed Effects-red line (-9.35, -0.18)
+</center>
+
+```{r, el, echo=FALSE, fig.width=14, fig.height=7}
 #Cape Cleare
+
+lm.cleare.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
+
 e <- ggplot(subset(avg.lengths, area=="capecleare"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=6)+
@@ -752,30 +709,169 @@ e
 
 
 
----&vcenter
+---
 ## Scope of Inference
 
-<center>
+<br><br><br><br>
 <font size=6>
 Technically does not extend to all Seward boats/fish, 
 BUT....
 </font>
-</center>
 <br>
 <br>
 <br><br><br>
-<center>
 <font size=6>
 No causal
 </font>
-</center>
 
 ---.class1 #id1 bg:#CBE7A5
 <br>
 <br>
-<br><br><br><br>
+<br><br><br>
 <center>
 <font size=7>
 **Questions?**
 </font>
 </center>
+
+--- 
+## Comparison - Resurrection Bay
+
+```{r, compareres, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE}
+#Look at resbay
+res.true <- compare %>%
+  filter(area=="resbay")
+res.int <- indicator %>%
+  filter(area=="resbay")
+
+#add in the truth
+res.int[12:21, 5] <- res.true$proportion
+names(res.int)[5] <- "truth"
+
+#d <- spline(x=res.int$YEAR, y=res.int$Proportion, n=22)
+
+#try doing this just with a smoother
+ggplot(data=res.int, aes(YEAR, Proportion))+
+  geom_line(aes(YEAR, Proportion), colour="darkred")+
+  geom_point(aes(YEAR, Proportion), colour="darkred", size=4)+
+  stat_smooth(colour="darkred", level=0.95, data=res.int[12:21,], size=2)+
+  #geom_line(aes(d$x, d$y), color="darkred")+
+  stat_smooth(aes(YEAR, truth), alpha=0.6, level=0.95, colour="midnight blue",
+              size=2)+
+  geom_point(aes(YEAR, truth), colour="midnightblue", size=4)+
+  geom_line(aes(YEAR, truth), colour="midnightblue")
+
+```
+
+---
+## Comparison - Patton Bay
+
+```{r, comparepatton, echo=FALSE, fig.width=12, message=FALSE, warning=FALSE}
+indicator <- read.csv("~/Documents/WritingProject/report/datafiles/indicator.csv")
+
+#Look at patton
+patton.true <- compare %>%
+  filter(area=="patton")
+patton.int <- subset(indicator, area=="patton")
+
+#add in the truth
+patton.int[12:21, 5] <- patton.true$proportion
+names(patton.int)[5] <- "truth"
+
+#try doing this just with a smoother
+ggplot(data=patton.int, aes(YEAR, Proportion))+
+  geom_line(aes(YEAR, Proportion), colour="darkred")+
+  geom_point(aes(YEAR, Proportion), colour="darkred", size=4)+
+  stat_smooth(colour="darkred", level=0.95, data=patton.int[12:21,], size=2)+
+  stat_smooth(aes(YEAR, truth), alpha=0.6, level=0.95, colour="midnight blue",
+              size=2)+
+  geom_point(aes(YEAR, truth), colour="midnightblue", size=4)+
+  geom_line(aes(YEAR, truth), colour="midnightblue")
+
+```
+
+--- 
+## Quasibinomial Logistic Regression
+
+```{r, binlog, echo=FALSE, fig.width=13, fig.height=4}
+counts <- read.csv("~/Documents/Writing Project/report/datafiles/counts.csv", head=T)
+
+###Plot empirical logits
+require(lattice)
+xyplot(logit~YEAR|area, data=counts, type=c("p","r"), ylab="empirical logit")
+```
+<br>
+
+<!--<center>$logit(p_{i})=\beta_0+\beta_1year_i$</center>-->
+
+<!--<center>$i \in (1993, 1994,..., 2014)$</center>-->
+
+<center>
+<ul style="list-style-type: circle; width:686px; margin:auto">
+
+<li>Each area modeled separately</li>
+
+<li>Assumptions</li>
+<ul style="list-style-type:persian">
+<li> Independence </li>
+<li> Linearity </li>
+<li> Outliers </li>
+</ul> </ul>
+
+</center>
+
+
+--- .dontcount
+## Results
+
+There is moderate evidence that the log odds of fishing at Cape Cleare changes over time, assuming a linear trend over years $1993$ to $2014$ (p-value$=0.02479$ from drop-in-deviance F-stat$=5.89$). 
+
+<br>
+
+```{r, interpret, echo=FALSE, results='asis', message=FALSE}
+glm.simple <- glm(cbind(yes,no)~1, data=subset(counts, area=="capecleare"), 
+                family='quasibinomial')
+#Drop in deviance F-test to see if year is important,  cleare
+#(135.89-104.97/1)/(104.97/20)=5.891207
+#1-pf(5.891207,1,20)=0.024786
+
+#Drop in deviance F-test to see if year is important,resbay
+#(100.575-73.545/1)/(73.545/20)
+#1-pf(7.350602,1,20)
+
+#Drop in deviance F-test to see if year is important,nuka
+#(57.475-56.799/1)/(56.799/20)
+#1-pf(0.2380324,1,20)
+
+#Drop in deviance F-test to see if year is important,nuka
+#(62.711-38.554/1)/(38.554/20)
+#1-pf(12.532,1,20)
+
+#Calculate estimates
+#exp(22*coef(glm.cleare)[2])
+#exp(22*confint(glm.cleare))
+
+#kable(summary(glm.cleare)$coef)
+
+table <- data.frame(matrix(c(0.0403615, 0.0161421, 5.8912, 0.02479, -0.04630, 0.01713, 7.3506,0.01344, 0.018844, 0.03846, 0.2380,0.6309,0.07596,
+                 0.01996,12.532, 0.002055), nrow=4, ncol=4, byrow=TRUE), row.names=c("capecleare", "resbay", "nuka", "patton"))
+names(table) <- c("YEAR coef", "SE", "F-stat", "Pr(>F)")
+
+kable(table)
+```
+
+
+--- .dontcount
+## Mixed Effects Model
+Each area modeled separately
+
+<br>
+<br>
+
+<center>$length_{i}=\beta_0+\beta_1year_i+\alpha_{i}+\epsilon_{i}$</center>
+
+<center>$\epsilon_{i} \overset{iid}{\sim} N(0, \sigma^2)$</center>
+<center>$\alpha_{i} \overset{iid}{\sim} N(0, \sigma^2_{\alpha})$</center>
+<br>
+<center>$i \in (1994, 1995,...,2013)$</center>
+
