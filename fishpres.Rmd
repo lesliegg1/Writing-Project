@@ -11,6 +11,8 @@ knit        : slidify::knit2slides
 
 ---
 
+
+
 <style>
 #slide-1 img{float:left;margin:auto; padding:8px;}
 </style>
@@ -874,4 +876,36 @@ Each area modeled separately
 <center>$\alpha_{i} \overset{iid}{\sim} N(0, \sigma^2_{\alpha})$</center>
 <br>
 <center>$i \in (1994, 1995,...,2013)$</center>
+
+---
+
+```{r, test, fig.width=14, fig.height=7, echo=FALSE}
+#Cape Cleare
+
+lm.cleare.wls <- lm(mean.in~year, data=subset(avg.lengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
+
+lm.cleare.show <- lm(mean.in~year, data=subset(avg.lengths, area=="capecleare")[-c(1:2),])
+
+e <- ggplot(subset(avg.lengths, area=="capecleare"), 
+       aes(as.numeric(as.character(year)), fit.me))+
+  geom_point(col="red", size=6)+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=6)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
+  theme(legend.position = "none")+
+  xlab("Cape Cleare")+
+  ylab("Length(in)")+
+  stat_function(fun=function(x)(coef(lm.cleare.ols)[1]+
+                                  coef(lm.cleare.ols)[2]*x), linetype="dashed", 
+                size=4)+
+  stat_function(fun=function(x)(coef(lm.cleare.wls)[1]+
+                                  coef(lm.cleare.wls)[2]*x), 
+                color="blue", size=2)+
+  stat_function(fun=function(x)(fixef(me.length.cleare)[1]+
+                                  fixef(me.length.cleare)[2]*x), 
+                colour="red", size=2)+
+    stat_function(fun=function(x)(coef(lm.cleare.show)[1]+
+                                  coef(lm.cleare.show)[2]*x), size=2)+
+  theme(axis.text=element_text(size=20), axis.title=element_text(size=20))
+e
+```
 

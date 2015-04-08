@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "Leslie"
+date: "04/05/2015"
+output: html_document
+---
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+--- .class1 #id1 bg:grey 
+
+<br><br><br><br><br><br>
+
+<font size=7 color=aliceblue>
+"You can't go East to the places you used to go, unless you go way far."
+</font>
+<br><br>
+<font size=5 color=gold>
+-Captain Suzie, *Gusto*
+</font>
+
+--- .class1 #id1 bg:grey
+
+<br><br><br><br><br>
+
+
+<font size=7 color=aliceblue>
+"The average size halibut in the 1990s <br>
+was 40 to 50 pounds and now,  <br>
+the average size halibut is 20 pounds."
+</font>
+<br><br>
+<font size=5 color=gold>
+-Captain Deejay, *Visitation*
+</font>
+
+<center>
+**Question 1**: Is there evidence that the distance Seward charter boats travel to fish for bottomfish has changed over the years 1993-2014?
+<style>
+#slide-12 img{display:block;margin:auto;text-align:center;}
+</style>
+
+```{r, distmap, echo=FALSE}
+colourCount = length(unique(int.dat$YEAR))
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+year.plot <- factor(int.dat$YEAR, levels=c("1993", "1996", "2000", "2004", "2007", "2010", "1994", "1997", "2001", "2005", "2008", "2011", "1995", "1998", "2002", "2006", "2009", "2012", "1999", "2003", "2013", "2014"))
+period<-ggplot(int.dat, aes(factor(ADFGSTAT, levels=unique(area.order$ADFGSTAT)),
+                    Proportion, group=factor(YEAR)))+
+  geom_line(aes(colour=year.plot))+facet_grid(period~.)+
+  geom_point(aes(colour=year.plot))+facet_grid(period~.)+
+  scale_colour_manual(values=getPalette(colourCount))+
+  theme(axis.text.x=element_text(angle=-90))+
+  xlab("Statistical Area Ordered by Travel Distance from Seward")+
+  theme(legend.position="none")
+```
+
+
+```{r, distmap2, echo=FALSE, fig.width=8, fig.height=8}
+int.dat <- read.csv("~/Documents/WritingProject/report/datafiles/intdat.csv")
+year.sep <- qplot(dist,Proportion, facets=~YEAR, geom='line', data=int.dat)
+
+period
+#require(gridExtra)
+#grid.arrange(period, nrow=1)
+```
+</center>
+
+---
+
+
+
