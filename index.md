@@ -17,9 +17,7 @@ knit        : slidify::knit2slides
 #slide-1 img{float:left;margin:auto; padding:8px;}
 </style>
 
-<center>
-<img src="~/Documents/WritingProject/presentation/images/maphang2.jpg" alt="fish" style="width: 850px;"/>
-</center>
+
 
 
 
