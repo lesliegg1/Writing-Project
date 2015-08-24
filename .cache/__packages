@@ -18,3 +18,5 @@ Rcpp
 rmarkdown
 slidify
 xtable
+devtools
+mosaicData

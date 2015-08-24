@@ -1,5 +1,5 @@
 ---
-title       : Halibut fishing in Seward, AK
+title       : The Sport Fishery in Seward, AK
 subtitle    : A writing project presentation
 author      : Leslie Gains-Germain
 framework   : io2012    # {io2012, html5slides, shower, dzslides, ...}
@@ -73,7 +73,7 @@ Biological Data
 
 <ol>
 <li>
-ADF&G Saltwater Logbook Database [Intranet]. 2004–2013. Anchorage, AK: Alaska Department of Fish and Game, Division of Sport Fish (cited 4/2/2015). Custom query details available upon request from ADF&G, Division of Sport Fish, Research and Technical Services.</li>
+ADF&G Saltwater Logbook Database. 2004-2013. Anchorage, AK: Alaska Department of Fish and Game, Divison of Sport Fish. Intranet. Accessed 15 Dec 2014. Custom query details available upon request from ADF\&G, Division of Sport Fish, Research and Technical Services. </li>
 <br>
 <li>
 ADF&G non-confidential data. 1993-2014. Homer, AK: Alaska Department of Fish and Game, Division of Sport Fish. Personal communication, Scott Meyer.</li>
