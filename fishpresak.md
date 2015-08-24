@@ -223,7 +223,7 @@ The odds of NOT fishing in Resurrection Bay in $2014$ are estimated to be $2.78$
 ![plot of chunk unnamed-chunk-2](assets/fig/unnamed-chunk-2.png) 
 
 --- 
-In the waters around Cape Junken, there is strong evidence of a relationship between mean fish length, on the log scale, and time over the years $1994$ to $2013$ (two-sided p-value$<0.0001$ from t-stat$=-5.520$ on $18$ df).
+In the waters around Cape Junken, there is strong evidence of a relationship between mean halibut length, on the log scale, and time over the years $1994$ to $2013$ (two-sided p-value$<0.0001$ from t-stat$=-5.520$ on $18$ df).
 
 
 
@@ -238,7 +238,7 @@ In the waters around Cape Junken, there is strong evidence of a relationship bet
 
 ---
 
-The median halibut length in Cape Junken is estimated to have decreased by $16.5$% over the years $1994$ to $2013$, with a $95$% confidence interval from a $11.0$% to a $21.6$% decrease.
+The median halibut length in Cape Junken is estimated to have decreased by $16.5$% over the years $1994$ to $2013$, with a $95$% confidence interval from a $11.0$% to a $21.6$% decrease. ($36$ to $30$ inches $\rightarrow$ $20.8$ to $11.5$ pounds)
 
 ![plot of chunk results3](assets/fig/results3-1.png) 
 
