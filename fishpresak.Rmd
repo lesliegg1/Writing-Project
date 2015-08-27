@@ -476,19 +476,25 @@ ggplot(avg.lengths, aes(as.numeric(as.character(year)), mean.in))+
 In the waters around Cape Junken, there is strong evidence of a relationship between mean halibut length, on the log scale, and time over the years $1994$ to $2013$ (two-sided p-value$<0.0001$ from t-stat$=-5.520$ on $18$ df).
 
 ```{r, ols, echo=FALSE}
+
 #do OLS to save for later
-lm.el.ols <- lm(mean.in~year, data=subset(avg.lengths, area=="elrington"))
-lm.cleare.ols <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="capecleare"))
+avg.loglengths <- na.omit(fish.stat[,7:10]) %>%
+  group_by(year, statarea, area) %>%
+  summarise(mean.in=mean(log(length.in))) %>%
+  ungroup()
 
-lm.junken.ols <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="junken"))
+lm.el.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="elrington"))
+lm.cleare.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="capecleare"))
 
-lm.aialik.ols <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="aialik"))
+lm.junken.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="junken"))
 
-lm.resbay.ols <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="resbay"))
+lm.aialik.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="aialik"))
+
+lm.resbay.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="resbay"))
 ```
 
 
-```{r, wls, echo=FALSE}
+```{r, wls, echo=FALSE, eval=FALSE}
 #Do WLS to save for plot
 weights <- fish.stat %>%
   group_by(area, year) %>%
@@ -496,15 +502,15 @@ weights <- fish.stat %>%
             precision=n/var(length.in, na.rm=TRUE)) %>%
   ungroup()
 
-lm.el.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="elrington"), weights=subset(weights, area=="elrington")$n)
+lm.el.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="elrington"), weights=subset(weights, area=="elrington")$n)
 
-lm.cleare.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
+lm.cleare.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
 
-lm.junken.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="junken"), weights=subset(weights, area=="junken")$n)
+lm.junken.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="junken"), weights=subset(weights, area=="junken")$n)
 
-lm.aialik.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="aialik"), weights=subset(weights, area=="aialik")$n)
+lm.aialik.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="aialik"), weights=subset(weights, area=="aialik")$n)
 
-lm.resbay.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="resbay"), weights=subset(weights, area=="resbay")$n)
+lm.resbay.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="resbay"), weights=subset(weights, area=="resbay")$n)
 ```
 
 
@@ -525,8 +531,8 @@ me.length.resbay <- lmer(log(length.in)~year+(1|year), data=subset(fish.stat, ar
 fitme <- unique(fitted(me.length.el))
 fit.me.vec <- c(unique(fitted(me.length.aialik)), unique(fitted(me.length.cleare)), unique(fitted(me.length.el)), unique(fitted(me.length.junken)), unique(fitted(me.length.resbay)))
 
-avg.lengths <- arrange(avg.lengths, area)
-avg.lengths$fit.me <- fit.me.vec
+avg.loglengths <- arrange(avg.loglengths, area)
+avg.loglengths$fit.me <- fit.me.vec
 
 #el.fun <- function(x) (fixef(me.length.el)[1]+fixef(me.length.el)[2]*x)
 #aialik.fun <- function(x) (fixef(me.length.aialik)[1]+fixef(me.length.aialik)[2]*x)
@@ -539,11 +545,11 @@ avg.lengths$fit.me <- fit.me.vec
 
 ##Do each plot separate
 #aialik
-a <- ggplot(subset(avg.lengths, area=="aialik"), 
+a <- ggplot(subset(avg.loglengths, area=="aialik"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=4)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=4)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=4)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("aialik")+
   ylab("log(Length)")+
@@ -556,11 +562,11 @@ a <- ggplot(subset(avg.lengths, area=="aialik"),
                 colour="red", size=2)
 
 #capecleare
-c <- ggplot(subset(avg.lengths, area=="capecleare"), 
+c <- ggplot(subset(avg.loglengths, area=="capecleare"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=4)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=4)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=4)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("capecleare")+
   ylab("log(Length)")+
@@ -573,11 +579,11 @@ c <- ggplot(subset(avg.lengths, area=="capecleare"),
                 colour="red", size=2)
 
 #elrington
-e <- ggplot(subset(avg.lengths, area=="elrington"), 
+e <- ggplot(subset(avg.loglengths, area=="elrington"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=4)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=4)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=4)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("elrington")+
   ylab("log(Length)")+
@@ -590,11 +596,11 @@ e <- ggplot(subset(avg.lengths, area=="elrington"),
                 colour="red", size=2)
 
 #junken
-j <- ggplot(subset(avg.lengths, area=="junken"), 
+j <- ggplot(subset(avg.loglengths, area=="junken"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=4)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=4)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=4)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("junken")+
   ylab("log(Length)")+
@@ -607,11 +613,11 @@ j <- ggplot(subset(avg.lengths, area=="junken"),
                 colour="red", size=2)
 
 #resbay
-r <- ggplot(subset(avg.lengths, area=="resbay"), 
+r <- ggplot(subset(avg.loglengths, area=="resbay"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=4)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=4)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=4)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("resbay")+
   ylab("log(Length)")+
@@ -685,15 +691,21 @@ Mixed Effects-red line (-19.7%, -0.43%)
 ```{r, el, echo=FALSE, fig.width=14, fig.height=7}
 #Cape Cleare
 
-lm.cleare.ols <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="capecleare"))
+weights <- fish.stat %>%
+  group_by(area, year) %>%
+  summarise(n=length(length.in), 
+            precision=n/var(length.in, na.rm=TRUE)) %>%
+  ungroup()
 
-lm.cleare.wls <- lm(log(mean.in)~year, data=subset(avg.lengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
+lm.cleare.ols <- lm(mean.in~year, data=subset(avg.loglengths, area=="capecleare"))
 
-e <- ggplot(subset(avg.lengths, area=="capecleare"), 
+lm.cleare.wls <- lm(mean.in~year, data=subset(avg.loglengths, area=="capecleare"), weights=subset(weights, area=="capecleare")$n)
+
+e <- ggplot(subset(avg.loglengths, area=="capecleare"), 
        aes(as.numeric(as.character(year)), fit.me))+
   geom_point(col="red", size=6)+
-  geom_point(aes(as.numeric(as.character(year)), log(mean.in)), size=6)+
-  geom_line(aes(as.numeric(as.character(year)), log(mean.in)), linetype="dotted")+
+  geom_point(aes(as.numeric(as.character(year)), mean.in), size=6)+
+  geom_line(aes(as.numeric(as.character(year)), mean.in), linetype="dotted")+
   theme(legend.position = "none")+
   xlab("Cape Cleare")+
   ylab("log(Length)")+

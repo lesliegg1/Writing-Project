@@ -260,7 +260,6 @@ Mixed Effects-red line (-19.7%, -0.43%)
 ![plot of chunk el](assets/fig/el-1.png) 
 
 
-
 ---
 ## Scope of Inference
 
